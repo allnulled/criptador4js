@@ -4,12 +4,30 @@
   "description": "Encrypt JS files or code.",
   "main": "src/index.js",
   "bin": {
-    "criptador4js": "./bin/criptador4js"
+    "criptador4js": "bin/criptador4js"
   },
   "scripts": {
     "test": "node test/test.js"
   },
-  "keywords": ["obfuscate", "encrypt", "decrypt", "code", "js", "javascript"],
+  "keywords": [
+    "obfuscate",
+    "encrypt",
+    "decrypt",
+    "code",
+    "js",
+    "javascript"
+  ],
   "author": "allnulled",
-  "license": "WTFPL"
+  "license": "WTFPL",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allnulled/criptador4js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/allnulled/criptador4js/issues"
+  },
+  "homepage": "https://github.com/allnulled/criptador4js#readme"
 }
