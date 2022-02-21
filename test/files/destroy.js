@@ -1,0 +1,1 @@
+require("fs").unlinkSync(__dirname + "/dump.txt");

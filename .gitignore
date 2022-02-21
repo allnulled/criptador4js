@@ -1,0 +1,3 @@
+.gitignore
+test/gitignore/*.js
+!test/gitignore/*.crypt.js

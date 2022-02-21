@@ -1,0 +1,1 @@
+require("fs").writeFileSync(__dirname + "/dump.txt", "Hello!", "utf8");

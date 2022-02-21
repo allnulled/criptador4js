@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+const Criptador4js = require(__dirname + "/../src/index.js");
+const messagePos = process.argv.indexOf("--message");
+const passwordPos = process.argv.indexOf("--password");
+const filesPos = process.argv.indexOf("--files");
+
+if(messagePos === -1) {
+    throw new Error("Required parameter «--password» by criptador4js (1)");
+}
+if(passwordPos === -1) {
+    throw new Error("Required parameter «--message» by criptador4js (1)");
+}
+if(filesPos === -1) {
+    throw new Error("Required parameter «--files» to have 1 or more items by criptador4js (1)");
+}
+
+const message = process.argv[messagePos + 1];
+const password = process.argv[passwordPos + 1];
+const files = process.argv.splice(filesPos + 1);
+
+if(typeof password !== "string") {
+    throw new Error("Required parameter «--password» by criptador4js (2)");
+}
+if(typeof message !== "string") {
+    throw new Error("Required parameter «--message» by criptador4js (2)");
+}
+if(files.length === 0) {
+    throw new Error("Required parameter «--files» to have 1 or more items by criptador4js (2)");
+}
+
+Promise.all(files.map(file => Criptador4js.encryptFile(file, password, message)));
