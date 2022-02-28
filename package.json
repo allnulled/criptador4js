@@ -1,6 +1,6 @@
 {
   "name": "criptador4js",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Encrypt JS files or code.",
   "main": "src/index.js",
   "bin": {

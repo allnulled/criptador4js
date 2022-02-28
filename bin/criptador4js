@@ -1,32 +1,93 @@
 #!/usr/bin/env node
 
-const Criptador4js = require(__dirname + "/../src/index.js");
-const messagePos = process.argv.indexOf("--message");
-const passwordPos = process.argv.indexOf("--password");
-const filesPos = process.argv.indexOf("--files");
+const main = async function() {
+    try {
+        
+        const Criptador4js = require(__dirname + "/../src/index.js");
+        const reductorFactoryForIndexOf = function(text) {
+            return (output,parameter,index) => {
+                if(parameter === text) {
+                    return index;
+                }
+                return output;
+            };
+        };
+        const printHelp = function() {
+            console.log("##########################################");
+            console.log("# This is the only help for criptador4js #");
+            console.log("##########################################");
+            console.log("");
+            console.log("To use «criptador4js» simply:");
+            console.log("  $ criptador4js");
+            console.log("     # Required parameters:  # ");
+            console.log("      --file file.js         # ");
+            console.log("      --file file1.js        # ");
+            console.log("      --file file2.js        # ");
+            console.log("      --message 'Question?'  # Clue for the password");
+            console.log("      --password answer      # ");
+            console.log("     # Optional parameters:  # ");
+            console.log("      --verbose              # ");
+            console.log("      --override             # Deletes previous file");
+            console.log("");
+            console.log("########################[ by allnulled ]##");
+            return;
+        }
+        
+        const isHelp = process.argv.reduce(reductorFactoryForIndexOf("--help"), -1);
+        if(isHelp) {
+            printHelp();
+            return;
+        }
+        const exportPos = process.argv.reduce(reductorFactoryForIndexOf("--export"), -1);
+        const verbosePos = process.argv.reduce(reductorFactoryForIndexOf("--verbose"), -1);
+        const overridePos = process.argv.reduce(reductorFactoryForIndexOf("--override"), -1);
+        const messagePos = process.argv.reduce(reductorFactoryForIndexOf("--message"), -1);
+        const passwordPos = process.argv.reduce(reductorFactoryForIndexOf("--password"), -1);
+        const filePos = process.argv.reduce(reductorFactoryForIndexOf("--file"), -1);
 
-if(messagePos === -1) {
-    throw new Error("Required parameter «--password» by criptador4js (1)");
-}
-if(passwordPos === -1) {
-    throw new Error("Required parameter «--message» by criptador4js (1)");
-}
-if(filesPos === -1) {
-    throw new Error("Required parameter «--files» to have 1 or more items by criptador4js (1)");
-}
+        if (passwordPos === -1) {
+            throw new Error("It is required parameter «--password» (1)");
+        }
+        if (messagePos === -1) {
+            throw new Error("It is required parameter «--message» (1)");
+        }
+        if (filePos === -1) {
+            throw new Error("It is required parameter «--file» to have one or more items (1)");
+        }
 
-const message = process.argv[messagePos + 1];
-const password = process.argv[passwordPos + 1];
-const files = process.argv.splice(filesPos + 1);
+        const message = process.argv[messagePos + 1];
+        const password = process.argv[passwordPos + 1];
+        const file = process.argv.splice(filePos + 1);
+        const exportVar = process.argv.splice(exportPos + 1);
+        const shouldOverride = overridePos !== -1;
+        const isVerbose = verbosePos !== -1;
 
-if(typeof password !== "string") {
-    throw new Error("Required parameter «--password» by criptador4js (2)");
-}
-if(typeof message !== "string") {
-    throw new Error("Required parameter «--message» by criptador4js (2)");
-}
-if(files.length === 0) {
-    throw new Error("Required parameter «--files» to have 1 or more items by criptador4js (2)");
-}
+        if (typeof password !== "string") {
+            throw new Error("It is required parameter «--password» (2)");
+        }
+        if (typeof message !== "string") {
+            throw new Error("It is required parameter «--message» (2)");
+        }
+        if (file.length === 0) {
+            throw new Error("It is required parameter «--file» to have one or more items (2)");
+        }
+        if(typeof exportVar !== "string") {
+            throw new Error("It is required parameter «--message» (2)");
+        }
 
-Promise.all(files.map(file => Criptador4js.encryptFile(file, password, message)));
+        for(let index = 0; index < file.length; index++) {
+            const file = file[index];
+            if(isVerbose) {
+                console.log(`OK: Encrypting JS file: ${file}`);
+            }
+            Criptador4js.encryptFile(file, password, message, exportVar, false, shouldOverride);
+        }
+
+        console.log("OK: JS file encrypted successfully by criptador.");
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+main();

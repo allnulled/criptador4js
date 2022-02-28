@@ -9,6 +9,7 @@ const checkDumpFile = function(exists = true) {
 
 const main = async function() {
     // try {
+    console.log("Password actual: " + password);
     if(!checkDumpFile(false)) fs.unlinkSync(__dirname + "/files/dump.txt");
     Criptador4js.encryptFile(__dirname + "/server/app.js", password, "Contraseña del fichero de app.js: ");
     Criptador4js.encryptFile(__dirname + "/files/create.js", password, "Contraseña del fichero create.js: ");

@@ -24,6 +24,9 @@ CriptadorUtils = class {
         const fs = require("fs");
         const path = require("path");
         let files = [];
+        if(fs.lstatSync(dir).isFile()) {
+            return [dir];
+        }
         let subnodes = fs.readdirSync(dir).map(f => path.resolve(dir, f));
         for (let indexSubnode = 0; indexSubnode < subnodes.length; indexSubnode++) {
             const subnode = subnodes[indexSubnode];
@@ -97,7 +100,7 @@ CriptadorUtils = class {
         };
     }
 
-    static xcryptFiles(basedir, filePattern, key, isEncryption = true) {
+    static xcryptFiles(basedir, filePattern, key, isEncryption = true, shouldOverride = false) {
         if(typeof basedir !== "string") {
             throw new Error("Required «basedir» to be a string");
         }
@@ -365,21 +368,23 @@ Criptador4js = class {
         return source;
     }
 
-    static encryptCode(code, password, message, globalId) {
+    static encryptCode(code, password, message, globalId = false) {
         const encryptedCode = Criptador.encrypt(code, password);
         const encryptedCodeEvaluable = Criptador4js.fromCodeToCryptedEval(encryptedCode, message, globalId);
         return encryptedCodeEvaluable;
     }
 
-    static encryptFile(file, password, message, globalId, outputFile = undefined) {
+    static encryptFile(file, password, message, globalId = false, outputFile = undefined, shouldOverride = false) {
         const fs = require("fs");
         const contents = fs.readFileSync(file).toString();
         const encryptedContents = Criptador4js.encryptCode(contents, password, message, globalId);
         let outputFileFinal = undefined;
         if(outputFile) {
             outputFileFinal = outputFile;
-        } else {
+        } else if(!shouldOverride) {
             outputFileFinal = file.replace(/\.js$/g, ".crypt.js");
+        } else {
+            outputFileFinal = file;
         }
         fs.writeFileSync(outputFileFinal, encryptedContents, "utf8");
         return true;
